@@ -1,0 +1,30 @@
+{
+  "name": "momentum",
+  "productName": "Momentum",
+  "author": "aayush",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Desktop daily progress tracking app",
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "build": "npm run build:electron && npm run build:renderer && npm run prepare:build",
+    "build:electron": "tsc -p tsconfig.json",
+    "build:renderer": "tsc -p tsconfig.renderer.json",
+    "prepare:build": "node scripts/prepare-build.cjs",
+    "start": "npm run build && electron .",
+    "package": "npm run build && electron-forge package",
+    "make": "npm run build && electron-forge make"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.2",
+    "@electron-forge/maker-squirrel": "^7.11.2",
+    "@types/node": "^20.0.0",
+    "electron": "^28.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "dotenv": "^17.4.2",
+    "mongoose": "^8.0.0"
+  }
+}

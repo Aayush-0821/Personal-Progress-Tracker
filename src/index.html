@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+               script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+               font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+               img-src 'self' data:;"
+  >
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MOMENTUM</title>
+
+  <!-- ADD LINK TO STYLESHEET HERE -->
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  >
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+  <!-- ========================= HEADER ========================= -->
+
+  <header class="topbar">
+
+    <div class="brand">
+      <div class="brand-mark">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+
+      <div>
+        <div class="brand-name">MOMENTUM</div>
+        <div class="brand-subtitle">PERSONAL PROGRESS</div>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="live-status">
+        <span class="status-dot"></span>
+        SYSTEM ACTIVE
+      </div>
+
+      <div class="selected-date" id="headerSelectedDate">
+        Today
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-button" id="todayButton" title="Go to today">
+        <i class="fa-solid fa-calendar-day"></i>
+      </button>
+
+      <div class="profile-chip">
+        <div class="profile-avatar">A</div>
+        <div>
+          <strong>My Dashboard</strong>
+          <small>Personal</small>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+
+  <!-- ========================= MAIN DASHBOARD ========================= -->
+
+  <main class="dashboard-grid">
+
+
+    <!-- ============================================================= -->
+    <!-- LEFT COLUMN -->
+    <!-- ============================================================= -->
+
+    <aside class="left-column">
+
+
+      <!-- DAILY TASKS -->
+
+      <section class="panel task-panel">
+
+        <div class="panel-header">
+
+          <div>
+            <span class="eyebrow cyan-text">TODAY'S FOCUS</span>
+            <h2 id="taskDateTitle">Daily Tasks</h2>
+          </div>
+
+          <div class="task-count" id="taskCount">
+            0/0
+          </div>
+
+        </div>
+
+
+        <form class="task-form" id="taskForm">
+
+          <input
+            type="text"
+            id="taskInput"
+            placeholder="Add a task..."
+            autocomplete="off"
+            maxlength="100"
+          >
+
+          <button type="submit">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+
+        </form>
+
+
+        <div class="task-progress">
+
+          <div class="progress-label">
+            <span>Daily completion</span>
+            <strong id="dailyProgressText">0%</strong>
+          </div>
+
+          <div class="progress-track">
+            <div
+              class="progress-fill cyan-gradient"
+              id="dailyProgressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+
+        </div>
+
+
+        <div class="task-list" id="taskList">
+          <!-- Tasks rendered by renderer.ts -->
+        </div>
+
+      </section>
+
+
+      <!-- TODAY'S PIE -->
+
+      <section class="panel today-panel">
+
+        <div class="panel-header compact">
+
+          <div>
+            <span class="eyebrow pink-text">SELECTED DAY</span>
+            <h2 id="pieTitle">Today's Breakdown</h2>
+          </div>
+
+          <div class="mini-icon pink-icon">
+            <i class="fa-solid fa-chart-pie"></i>
+          </div>
+
+        </div>
+
+
+        <div class="daily-donut-wrapper">
+
+          <canvas id="dailyDonutChart"></canvas>
+
+          <div class="donut-center">
+
+            <strong id="dailyDonutPercent">0%</strong>
+
+            <span>COMPLETE</span>
+
+          </div>
+
+        </div>
+
+
+        <div class="daily-summary">
+
+          <div class="summary-item">
+
+            <span class="summary-dot cyan-dot"></span>
+
+            <div>
+              <small>Completed</small>
+              <strong id="completedCount">0</strong>
+            </div>
+
+          </div>
+
+
+          <div class="summary-item">
+
+            <span class="summary-dot pink-dot"></span>
+
+            <div>
+              <small>Remaining</small>
+              <strong id="remainingCount">0</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- STREAK CARD -->
+
+      <section class="streak-card">
+
+        <div class="streak-glow"></div>
+
+        <div class="streak-icon">
+          <i class="fa-solid fa-fire"></i>
+        </div>
+
+        <div class="streak-info">
+          <span>CURRENT STREAK</span>
+          <strong id="streakValue">0 DAYS</strong>
+        </div>
+
+        <div class="streak-arrow">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+
+      </section>
+
+    </aside>
+
+
+
+    <!-- ============================================================= -->
+    <!-- CENTER COLUMN -->
+    <!-- ============================================================= -->
+
+    <section class="center-column">
+
+
+      <!-- HEATMAP -->
+
+      <section class="panel heatmap-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <span class="eyebrow purple-text">CONSISTENCY MATRIX</span>
+
+            <h2>Last 12 Months</h2>
+
+          </div>
+
+
+          <div class="heatmap-meta">
+
+            <div>
+              <strong id="activeDays">0</strong>
+              <span>active days</span>
+            </div>
+
+            <div>
+              <strong id="totalTracked">0</strong>
+              <span>tasks done</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="heatmap-months" id="heatmapMonths">
+          <!-- Month labels -->
+        </div>
+
+
+        <div class="heatmap-wrapper">
+
+          <div class="weekday-labels">
+
+            <span>MON</span>
+            <span>WED</span>
+            <span>FRI</span>
+
+          </div>
+
+
+          <div class="heatmap" id="heatmap">
+            <!-- Heatmap generated dynamically -->
+          </div>
+
+        </div>
+
+
+        <div class="heatmap-footer">
+
+          <span>LESS</span>
+
+          <div class="legend-box level-0"></div>
+          <div class="legend-box level-1"></div>
+          <div class="legend-box level-2"></div>
+          <div class="legend-box level-3"></div>
+          <div class="legend-box level-4"></div>
+
+          <span>MORE</span>
+
+          <div class="heatmap-help">
+            <i class="fa-regular fa-circle-question"></i>
+            Hover a day to inspect activity
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- HEATMAP ANALYTICS -->
+
+      <section class="analytics-row">
+
+
+        <div class="panel analytics-card">
+
+          <div class="chart-heading">
+
+            <div>
+              <span class="eyebrow cyan-text">HEATMAP ANALYTICS</span>
+              <h3>Daily Activity</h3>
+            </div>
+
+            <div class="chart-stat">
+              <strong id="avgCompletion">0%</strong>
+              <span>AVG</span>
+            </div>
+
+          </div>
+
+          <div class="chart-container">
+            <canvas id="activityLineChart"></canvas>
+          </div>
+
+        </div>
+
+
+        <div class="panel analytics-card">
+
+          <div class="chart-heading">
+
+            <div>
+              <span class="eyebrow pink-text">OUTPUT</span>
+              <h3>Tasks Completed</h3>
+            </div>
+
+            <div class="chart-stat pink-stat">
+              <strong id="weeklyCompleted">0</strong>
+              <span>30 DAYS</span>
+            </div>
+
+          </div>
+
+          <div class="chart-container">
+            <canvas id="completionBarChart"></canvas>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CATEGORY PERFORMANCE -->
+
+      <section class="panel category-panel">
+
+        <div class="panel-header compact">
+
+          <div>
+            <span class="eyebrow green-text">PERFORMANCE</span>
+            <h2>Performance</h2>
+          </div>
+
+          <span class="panel-tag">
+            90 DAY VIEW
+          </span>
+
+        </div>
+
+
+        <div class="category-bars" id="categoryBars">
+          <!-- Rendered dynamically -->
+        </div>
+
+      </section>
+
+
+    </section>
+
+
+
+    <!-- ============================================================= -->
+    <!-- RIGHT COLUMN -->
+    <!-- ============================================================= -->
+
+    <aside class="right-column">
+
+
+      <!-- WEEKLY RADAR -->
+
+      <section class="panel radar-panel">
+
+        <div class="panel-header compact">
+
+          <div>
+            <span class="eyebrow amber-text">PERFORMANCE MAP</span>
+            <h2>Balance</h2>
+          </div>
+
+          <div class="mini-icon amber-icon">
+            <i class="fa-solid fa-crosshairs"></i>
+          </div>
+
+        </div>
+
+        <div class="radar-chart">
+          <canvas id="radarChart"></canvas>
+        </div>
+
+      </section>
+
+
+      <!-- PRODUCTIVITY DISTRIBUTION -->
+
+      <section class="panel distribution-panel">
+
+        <div class="panel-header compact">
+
+          <div>
+            <span class="eyebrow purple-text">DISTRIBUTION</span>
+            <h2>Productivity</h2>
+          </div>
+
+        </div>
+
+
+        <div class="distribution-content">
+
+          <div class="large-stat">
+            <strong id="productivityScore">0%</strong>
+            <span>PRODUCTIVITY SCORE</span>
+          </div>
+
+          <div class="distribution-chart">
+            <canvas id="distributionChart"></canvas>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- INSIGHTS -->
+
+      <section class="panel insights-panel">
+
+        <div class="panel-header compact">
+
+          <div>
+            <span class="eyebrow cyan-text">SYSTEM INSIGHTS</span>
+            <h2>Overview</h2>
+          </div>
+
+          <div class="mini-icon cyan-icon">
+            <i class="fa-solid fa-sparkles"></i>
+          </div>
+
+        </div>
+
+
+        <div class="insight-list">
+
+          <div class="insight">
+
+            <div class="insight-icon cyan-bg">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+
+            <div>
+              <span>BEST DAY</span>
+              <strong id="bestDay">—</strong>
+            </div>
+
+          </div>
+
+
+          <div class="insight">
+
+            <div class="insight-icon pink-bg">
+              <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <div>
+              <span>ACTIVE DAYS</span>
+              <strong id="insightActiveDays">0</strong>
+            </div>
+
+          </div>
+
+
+          <div class="insight">
+
+            <div class="insight-icon purple-bg">
+              <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <div>
+              <span>AVG COMPLETION</span>
+              <strong id="insightAverage">0%</strong>
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+    </aside>
+
+  </main>
+
+</div>
+
+<!-- ========================= MONTH CALENDAR ========================= -->
+
+<div class="calendar-overlay" id="calendarOverlay">
+
+  <div class="calendar-modal">
+
+    <div class="calendar-modal-header">
+
+      <div>
+        <span class="eyebrow cyan-text">ACTIVITY CALENDAR</span>
+        <h2 id="calendarMonthTitle">September 2026</h2>
+      </div>
+
+      <button
+        class="calendar-close"
+        id="calendarClose"
+        type="button"
+        aria-label="Close calendar"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <div class="calendar-weekdays">
+      <span>MON</span>
+      <span>TUE</span>
+      <span>WED</span>
+      <span>THU</span>
+      <span>FRI</span>
+      <span>SAT</span>
+      <span>SUN</span>
+    </div>
+
+    <div
+      class="calendar-grid"
+      id="calendarGrid"
+    ></div>
+
+    <div class="calendar-legend">
+      <span class="calendar-check-example">✓</span>
+      <span>All tasks completed</span>
+    </div>
+
+  </div>
+
+</div>
+
+
+<script type="module" src="../dist/src/renderer.js"></script>
+
+</body>
+</html>
