@@ -18,8 +18,12 @@ const __dirname = path.dirname(__filename);
 /* ENVIRONMENT */
 /* ========================================================= */
 
+const envPath = app.isPackaged
+  ? path.join(app.getPath("userData"), ".env")
+  : path.join(process.cwd(), ".env");
+
 dotenv.config({
-  path: path.join(process.cwd(), ".env"),
+  path: envPath,
 });
 
 /* ========================================================= */
